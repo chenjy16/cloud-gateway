@@ -1,0 +1,9 @@
+# Auto Configure
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+InfluxDbConfiguration,\
+SoulConfiguration,\
+RedisConfiguration,\
+SpringCloudAutoConfiguration,\
+ZookeeperConfiguration
+
+org.springframework.context.ApplicationListener=\
