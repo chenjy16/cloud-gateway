@@ -1,0 +1,4 @@
+org.cloud.gateway.configuration.zookeeper.serializer.KryoSerializer
+org.cloud.gateway.configuration.zookeeper.serializer.HessianSerializer
+org.cloud.gateway.configuration.zookeeper.serializer.ProtostuffSerializer
+org.cloud.gateway.configuration.zookeeper.serializer.JavaSerializer
