@@ -12,7 +12,7 @@
     <dependencies>
         <dependency>
             <groupId>org.cloud</groupId>
-            <artifactId>gateway-common</artifactId>
+            <artifactId>gateway-core</artifactId>
         </dependency>
 
         <dependency>

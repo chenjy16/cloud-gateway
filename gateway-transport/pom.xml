@@ -78,27 +78,13 @@
             <artifactId>spring-boot-test-autoconfigure</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.github.miwurster</groupId>
-            <artifactId>spring-data-influxdb</artifactId>
-            <version>1.7</version>
-        </dependency>
 
         <dependency>
             <groupId>com.lmax</groupId>
             <artifactId>disruptor</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.netflix.hystrix</groupId>
-            <artifactId>hystrix-core</artifactId>
-            <version>1.5.12</version>
-        </dependency>
-        <dependency>
-            <groupId>com.netflix.hystrix</groupId>
-            <artifactId>hystrix-metrics-event-stream</artifactId>
-            <version>1.4.10</version>
-        </dependency>
+
 
         <dependency>
             <groupId>io.reactivex</groupId>

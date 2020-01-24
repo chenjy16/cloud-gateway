@@ -11,8 +11,8 @@
     <name>gateway</name>
     <modules>
         <module>gateway-admin</module>
-        <module>gateway-common</module>
-        <module>gateway-web</module>
+        <module>gateway-core</module>
+        <module>gateway-transport</module>
         <module>gateway-configuration</module>
         <module>gateway-spring-boot-starter</module>
         <module>gateway-bootstrap</module>
