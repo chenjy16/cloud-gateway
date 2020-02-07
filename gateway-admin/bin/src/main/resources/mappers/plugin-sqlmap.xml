@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.cloud.gateway.admin.mapper.PluginMapper">
+    <resultMap id="BaseResultMap" type="org.cloud.gateway.admin.entity.PluginDO">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="date_created" jdbcType="TIMESTAMP" property="dateCreated"/>
+        <result column="date_updated" jdbcType="TIMESTAMP" property="dateUpdated"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="enabled" jdbcType="TINYINT" property="enabled"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, date_created, date_updated, name, enabled
+    </sql>
+
+    <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plugin
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByQuery" parameterType="org.cloud.gateway.admin.query.PluginQuery" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plugin
+        <if test="name != null">
+            where name = #{name,jdbcType=VARCHAR}
+        </if>
+        <if test="pageParameter != null">
+            limit #{pageParameter.offset},#{pageParameter.pageSize}
+        </if>
+    </select>
+
+    <select id="countByQuery" parameterType="org.cloud.gateway.admin.query.PluginQuery" resultType="java.lang.Integer">
+        select count(1)
+        from plugin
+        <if test="name != null">
+            where name = #{name,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="org.cloud.gateway.admin.entity.PluginDO">
+        insert into plugin (id, date_created, date_updated,
+        name, enabled)
+        values (#{id,jdbcType=VARCHAR}, #{dateCreated,jdbcType=TIMESTAMP}, #{dateUpdated,jdbcType=TIMESTAMP},
+        #{name,jdbcType=VARCHAR}, #{enabled,jdbcType=TINYINT})
+    </insert>
+
+    <insert id="insertSelective" parameterType="org.cloud.gateway.admin.entity.PluginDO">
+        insert into plugin
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            <if test="dateCreated != null">
+                date_created,
+            </if>
+            <if test="dateUpdated != null">
+                date_updated,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="enabled != null">
+                enabled,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id,jdbcType=VARCHAR},
+            <if test="dateCreated != null">
+                #{dateCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dateUpdated != null">
+                #{dateUpdated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="enabled != null">
+                #{enabled,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="org.cloud.gateway.admin.entity.PluginDO">
+        update plugin
+        set date_created = #{dateCreated,jdbcType=TIMESTAMP},
+        date_updated = #{dateUpdated,jdbcType=TIMESTAMP},
+        name = #{name,jdbcType=VARCHAR},
+        enabled = #{enabled,jdbcType=TINYINT}
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateSelective" parameterType="org.cloud.gateway.admin.entity.PluginDO">
+        update plugin
+        <set>
+            <if test="dateCreated != null">
+                date_created = #{dateCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dateUpdated != null">
+                date_updated = #{dateUpdated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="enabled != null">
+                enabled = #{enabled,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String">
+        delete from plugin
+        where id = #{id,jdbcType=VARCHAR}
+    </delete>
+</mapper>

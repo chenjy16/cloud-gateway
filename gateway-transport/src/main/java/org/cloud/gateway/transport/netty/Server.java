@@ -4,10 +4,6 @@ import com.netflix.config.DynamicBooleanProperty;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.epoll.*;
-import io.netty.channel.kqueue.KQueue;
-import io.netty.channel.kqueue.KQueueEventLoopGroup;
-import io.netty.channel.kqueue.KQueueServerSocketChannel;
-import io.netty.channel.kqueue.KQueueSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -84,8 +80,7 @@ public class Server
 
     public void start(boolean sync)
     {
-        serverGroup = new ServerGroup(
-                "Salamander", eventLoopConfig.acceptorCount(), eventLoopConfig.eventLoopCount());
+        serverGroup = new ServerGroup("Salamander", eventLoopConfig.acceptorCount(), eventLoopConfig.eventLoopCount());
 
         serverGroup.initializeTransport();
 
@@ -131,6 +126,8 @@ public class Server
         clientConnectionsShutdown.gracefullyShutdownClientChannels();
     }
 
+    
+    
     private ChannelFuture setupServerBootstrap(
             SocketAddress listenAddress, ChannelInitializer<?> channelInitializer) throws InterruptedException {
 
@@ -160,9 +157,6 @@ public class Server
         serverBootstrap.validate();
 
         LOG.info("Binding to : " + listenAddress);
-
-        // Flag status as UP just before binding to the port.
-        serverStatusManager.localStatus(InstanceInfo.InstanceStatus.UP);
 
         // Bind and start to accept incoming connections.
         return serverBootstrap.bind(listenAddress).sync();
@@ -252,6 +246,8 @@ public class Server
 
             postEventLoopCreationHook(clientToProxyBossPool, clientToProxyWorkerPool);
         }
+        
+        
 
         synchronized private void stop()
         {
@@ -261,10 +257,7 @@ public class Server
                 return;
             }
 
-            // Flag status as down.
-            // TODO - is this _only_ changing the local status? And therefore should we also implement a HealthCheckHandler
-            // that we can flag to return DOWN here (would that then update Discovery? or still be a delay?)
-            serverStatusManager.localStatus(InstanceInfo.InstanceStatus.DOWN);
+         
 
             // Shutdown each of the client connections (blocks until complete).
             // NOTE: ClientConnectionsShutdown can also be configured to gracefully close connections when the
@@ -321,20 +314,5 @@ public class Server
         return available;
     }
 
-    private static boolean kqueueIsAvailable() {
-        boolean available;
-        try {
-            available = KQueue.isAvailable();
-        } catch (NoClassDefFoundError e) {
-            LOG.debug("KQueue is unavailable, skipping", e);
-            return false;
-        } catch (RuntimeException | Error e) {
-            LOG.warn("KQueue is unavailable, skipping", e);
-            return false;
-        }
-        if (!available) {
-            LOG.debug("KQueue is unavailable, skipping", KQueue.unavailabilityCause());
-        }
-        return available;
-    }
+
 }
