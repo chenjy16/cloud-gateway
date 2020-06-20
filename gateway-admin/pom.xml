@@ -3,27 +3,27 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>gateway</artifactId>
         <groupId>org.cloud</groupId>
+        <artifactId>gateway</artifactId>
         <version>1.0.2-RELEASE</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>gateway-admin</artifactId>
+
+
     <dependencies>
+
         <dependency>
             <groupId>org.cloud</groupId>
             <artifactId>gateway-core</artifactId>
         </dependency>
+
 
         <dependency>
             <groupId>org.cloud</groupId>
             <artifactId>gateway-configuration</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webflux</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

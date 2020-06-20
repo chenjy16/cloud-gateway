@@ -13,6 +13,7 @@
         <module>gateway-admin</module>
         <module>gateway-core</module>
         <module>gateway-transport</module>
+        <module>gateway-netty</module>
         <module>gateway-configuration</module>
         <module>gateway-spring-boot-starter</module>
         <module>gateway-bootstrap</module>
@@ -67,7 +68,7 @@
 
             <dependency>
                 <groupId>org.cloud</groupId>
-                <artifactId>gateway-common</artifactId>
+                <artifactId>gateway-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -207,6 +208,7 @@
                 <artifactId>pagehelper</artifactId>
                 <version>${pagehelper.version}</version>
             </dependency>
+      
 
         </dependencies>
     </dependencyManagement>
