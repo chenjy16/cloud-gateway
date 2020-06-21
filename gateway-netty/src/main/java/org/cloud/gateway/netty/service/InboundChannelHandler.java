@@ -53,9 +53,9 @@ public  final class InboundChannelHandler extends ChannelInboundHandlerAdapter {
             super.userEventTriggered(ctx, evt);
         }
         finally {
-           /* if (evt instanceof HttpLifecycleChannelHandler.CompleteEvent) {
+            if (evt instanceof HttpLifecycleChannelHandler.CompleteEvent) {
                 ctx.channel().attr(ATTR_STATE).set(null);
-            }*/
+            }
         }
     }
 

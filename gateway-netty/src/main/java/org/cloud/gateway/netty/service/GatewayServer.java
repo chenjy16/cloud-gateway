@@ -4,7 +4,6 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
-import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 
 
@@ -12,7 +11,7 @@ import io.netty.handler.codec.http.HttpServerCodec;
 public final class GatewayServer extends NettyTCPServer{
 
 
-
+    SessionContextDecorator sessionCtxDecorator;
 
     public GatewayServer(int port) {
         super(port);
@@ -39,8 +38,16 @@ public final class GatewayServer extends NettyTCPServer{
     @Override
     protected void initPipeline(ChannelPipeline pipeline) {
         pipeline.addLast(new HttpServerCodec());
+
+        pipeline.addLast(new HttpServerLifecycleChannelHandler.HttpServerLifecycleInboundChannelHandler());
+        pipeline.addLast(new HttpServerLifecycleChannelHandler.HttpServerLifecycleOutboundChannelHandler());
+        pipeline.addLast(new HttpBodySizeRecordingChannelHandler.InboundChannelHandler());
+        pipeline.addLast(new HttpBodySizeRecordingChannelHandler.OutboundChannelHandler());
         //pipeline.addLast(new HttpObjectAggregator(65536));
         //pipeline.addLast(getChannelHandler());
+        pipeline.addLast(new ClientRequestReceiver(sessionCtxDecorator));
+        pipeline.addLast(new ClientResponseWriter());
+
     }
 
     @Override
