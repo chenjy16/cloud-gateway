@@ -28,15 +28,28 @@ public class ProxyEndpoint  extends SyncGatewayFilterAdapter<HttpRequestMessage,
     protected final AtomicReference<String> chosenHostAddr;
     protected final BasicNettyOrigin origin;
     protected int attemptNum;
+    protected MethodBinding<?> methodBinding;
 
 
-    public ProxyEndpoint(ChannelHandlerContext channelCtx, HttpRequestMessage zuulRequest, AtomicReference<Server> chosenServer, AtomicReference<String> chosenHostAddr, BasicNettyOrigin origin) {
-        this.channelCtx = channelCtx;
-        this.zuulRequest = zuulRequest;
-        this.chosenServer = chosenServer;
-        this.chosenHostAddr = chosenHostAddr;
-        this.origin = origin;
+
+
+
+
+    public ProxyEndpoint(final HttpRequestMessage inMesg, final ChannelHandlerContext ctx,
+                         final FilterRunner<HttpResponseMessage, ?> filters, MethodBinding<?> methodBinding) {
+        channelCtx = ctx;
+        responseFilters = filters;
+        this.methodBinding = methodBinding;
+        this.zuulRequest = null;
+        this.chosenServer = null;
+        this.chosenHostAddr = null;
+        this.origin = null;
+
+
     }
+
+
+
 
     @Override
     public void operationComplete(Future<PooledConnection> pooledConnectionFuture) throws Exception {

@@ -2,14 +2,14 @@ package org.cloud.gateway.message;
 
 import reactor.netty.http.Cookies;
 
-public interface HttpResponseInfo extends ZuulMessage {
+public interface HttpResponseInfo extends GatewayMessage {
     int getStatus();
 
     /** The immutable request that was originally received from client. */
     HttpRequestInfo getInboundRequest();
 
     @Override
-    ZuulMessage clone();
+    GatewayMessage clone();
 
     @Override
     String getInfoForLogging();

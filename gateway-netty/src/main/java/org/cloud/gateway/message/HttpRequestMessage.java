@@ -14,7 +14,7 @@ public interface HttpRequestMessage extends HttpRequestInfo
 
     void setServerName(String serverName);
 
-    ZuulMessage clone();
+    GatewayMessage clone();
 
     void storeInboundRequest();
 

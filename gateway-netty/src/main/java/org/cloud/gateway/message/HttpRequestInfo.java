@@ -4,7 +4,7 @@ import org.cloud.gateway.netty.service.HttpQueryParams;
 import reactor.netty.http.Cookies;
 
 
-public interface HttpRequestInfo extends ZuulMessage
+public interface HttpRequestInfo extends GatewayMessage
 {
     String getProtocol();
 

@@ -5,7 +5,7 @@ import io.netty.handler.codec.http.HttpContent;
 import org.cloud.gateway.netty.filter.GatewayFilter;
 import org.cloud.gateway.netty.service.SessionContext;
 
-public interface ZuulMessage extends Cloneable {
+public interface GatewayMessage extends Cloneable {
 
     /**
      * Returns the session context of this message.
@@ -112,7 +112,7 @@ public interface ZuulMessage extends Cloneable {
     /**
      * Returns a copy of this message.
      */
-    ZuulMessage clone();
+    GatewayMessage clone();
 
     /**
      * Returns a string that reprsents this message which is suitable for debugging.

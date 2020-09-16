@@ -1,7 +1,7 @@
 package org.cloud.gateway.netty.filter;
-import org.cloud.gateway.message.ZuulMessage;
+import org.cloud.gateway.message.GatewayMessage;
 
-public interface GatewayFilter<I extends ZuulMessage, O extends ZuulMessage> {
+public interface GatewayFilter<I extends GatewayMessage, O extends GatewayMessage> {
 
     FilterSyncType getSyncType();
 

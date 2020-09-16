@@ -1,16 +1,15 @@
 package org.cloud.gateway.netty.filter;
 import io.netty.handler.codec.http.HttpContent;
-import org.cloud.gateway.message.HttpRequestMessage;
-import org.cloud.gateway.message.ZuulMessage;
+import org.cloud.gateway.message.GatewayMessage;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
-public class GatewayFilterChainRunner<T extends ZuulMessage> extends BaseZuulFilterRunner<T, T>{
+public class GatewayFilterChainRunner<T extends GatewayMessage> extends BaseGatewayFilterRunner<T, T> {
 
     private final GatewayFilter<T, T>[] filters;
 
 
-    public GatewayFilterChainRunner(FilterRunner<T, ? extends ZuulMessage> nextStage, GatewayFilter<T, T>[] filters) {
+    public GatewayFilterChainRunner(FilterRunner<T, ? extends GatewayMessage> nextStage, GatewayFilter<T, T>[] filters) {
         super(nextStage,null);
         this.filters = filters;
     }
@@ -73,9 +72,6 @@ public class GatewayFilterChainRunner<T extends ZuulMessage> extends BaseZuulFil
 
 
 
-     final boolean isFilterAwaitingBody(HttpRequestMessage zuulMesg) {
-        return zuulMesg.getContext().containsKey("AWAITING_BODY_FLAG_SESSION_CTX_KEY");
-    }
 
 
 
