@@ -17,6 +17,7 @@
         <module>gateway-configuration</module>
         <module>gateway-spring-boot-starter</module>
         <module>gateway-bootstrap</module>
+
     </modules>
 
     <licenses>
