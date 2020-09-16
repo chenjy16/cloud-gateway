@@ -4,11 +4,15 @@ import java.util.HashMap;
 
 public class SessionContext extends HashMap<String, Object> implements Cloneable{
 
+    private boolean cancelled = false;
+
     public SessionContext(){
 
     }
 
-
+    public boolean isCancelled() {
+        return cancelled;
+    }
     /**
      * Makes a copy of the RequestContext. This is used for debugging.
      *

@@ -9,17 +9,17 @@ public class GatewayFilterChainRunner<T extends GatewayMessage> extends BaseGate
     private final GatewayFilter<T, T>[] filters;
 
 
-    public GatewayFilterChainRunner(FilterRunner<T, ? extends GatewayMessage> nextStage, GatewayFilter<T, T>[] filters) {
-        super(nextStage,null);
-        this.filters = filters;
+    public GatewayFilterChainRunner(FilterRunner<T, ? extends GatewayMessage> nextStage,
+                                    GatewayFilter<T, T>[] gwfilters) {
+        super(nextStage, gwfilters[0].filterType());
+        this.filters = gwfilters;
     }
-
 
 
 
     @Override
     public void filter(final T inMesg) {
-            runFilters(inMesg,null);
+        runFilters(inMesg,initRunningFilterIndex(inMesg));
     }
 
 
@@ -33,8 +33,6 @@ public class GatewayFilterChainRunner<T extends GatewayMessage> extends BaseGate
             //Filter chain has run to end, pass down the channel pipeline
             invokeNextStage(inMesg, chunk);
         } else {
-
-
             inMesg.bufferBodyContents(chunk);
             boolean isAwaitingBody = isFilterAwaitingBody(inMesg);
             // Record passport states for start and end of buffering bodies.
@@ -54,27 +52,16 @@ public class GatewayFilterChainRunner<T extends GatewayMessage> extends BaseGate
         T inMesg = mesg;
         int i = runningFilterIdx.get();
         while (i < filters.length) {
-
             final GatewayFilter<T, T> filter = filters[i];
             //过滤器处理的核心逻辑
             final T outMesg = filter(filter, inMesg);
-
+            inMesg = outMesg;
+            i = runningFilterIdx.incrementAndGet();
         }
         //Filter chain has reached its end, pass result to the next stage
         // Filter 执行完后，进入到上面提到的endpoint处理。这里的
         // endPoint 是ZuulEndPointRunner。
         invokeNextStage(mesg);
     }
-
-
-
-
-
-
-
-
-
-
-
 
 }

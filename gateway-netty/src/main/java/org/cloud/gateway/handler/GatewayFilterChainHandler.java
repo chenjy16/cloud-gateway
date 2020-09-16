@@ -32,15 +32,13 @@ public class GatewayFilterChainHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        //http header 部分
-        if (msg instanceof HttpRequestMessage) {
+
+        if (msg instanceof HttpRequestMessage) {//http header 部分
             gatewayRequest = (HttpRequestMessage)msg;
             requestFilterChain.filter(gatewayRequest);
-
         } else if ((msg instanceof HttpContent)&&(gatewayRequest != null)) {//http body 部分，如果有多个，那最后一个就是LastHttpContent
-
+            requestFilterChain.filter(gatewayRequest, (HttpContent) msg);
         }else {
-
             ReferenceCountUtil.release(msg);
         }
     }
@@ -49,8 +47,6 @@ public class GatewayFilterChainHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public final void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-
-
         super.userEventTriggered(ctx, evt);
     }
 
@@ -59,6 +55,8 @@ public class GatewayFilterChainHandler extends ChannelInboundHandlerAdapter {
     protected HttpRequestMessage getZuulRequest() {
         return gatewayRequest;
     }
+
+
 
     protected void fireEndpointFinish(final boolean error) {
 

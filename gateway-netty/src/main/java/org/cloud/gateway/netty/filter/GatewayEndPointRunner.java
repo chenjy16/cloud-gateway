@@ -1,5 +1,6 @@
 package org.cloud.gateway.netty.filter;
 
+import com.google.common.base.Preconditions;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.HttpContent;
 import org.cloud.gateway.message.GatewayMessage;
@@ -21,11 +22,23 @@ public class GatewayEndPointRunner extends BaseGatewayFilterRunner<HttpRequestMe
 
 
 
-    public void filter(final HttpRequestMessage zuulReq) {
+    public void filter(final HttpRequestMessage gatewayReq) {
 
-         HttpResponseMessage zuulResp = filter(new ProxyEndpoint(zuulReq, (ChannelHandlerContext) zuulReq.getContext().get(NETTY_SERVER_CHANNEL_HANDLER_CONTEXT), respFilters, MethodBinding.NO_OP_BINDING), zuulReq);
+        if (gatewayReq.getContext().isCancelled()) {
+            gatewayReq.disposeBufferedBody();
+            return;
+        }
+        Preconditions.checkNotNull(gatewayReq, "input message");
+
+        ProxyEndpoint endpoint=new ProxyEndpoint(gatewayReq, (ChannelHandlerContext) gatewayReq.getContext().get(NETTY_SERVER_CHANNEL_HANDLER_CONTEXT), respFilters, MethodBinding.NO_OP_BINDING);
+        //发送请求到后端
+        HttpResponseMessage zuulResp = filter(endpoint, gatewayReq);
 
 
+        //response过滤器
+        if ((zuulResp != null)&&(! (endpoint instanceof ProxyEndpoint))) {
+            invokeNextStage(zuulResp);
+        }
     }
 
 
