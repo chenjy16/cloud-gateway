@@ -21,7 +21,11 @@ public class GatewayEndPointRunner extends BaseGatewayFilterRunner<HttpRequestMe
 
 
 
-
+    /**
+     * @desc
+     * @author chenjianyu944@gmail.com
+     * @date   2020/9/16 19:55
+     **/
     public void filter(final HttpRequestMessage gatewayReq) {
 
         if (gatewayReq.getContext().isCancelled()) {
@@ -33,13 +37,13 @@ public class GatewayEndPointRunner extends BaseGatewayFilterRunner<HttpRequestMe
         ProxyEndpoint endpoint=new ProxyEndpoint(gatewayReq, (ChannelHandlerContext) gatewayReq.getContext().get(NETTY_SERVER_CHANNEL_HANDLER_CONTEXT), respFilters, MethodBinding.NO_OP_BINDING);
         //发送请求到后端
         HttpResponseMessage zuulResp = filter(endpoint, gatewayReq);
-
-
         //response过滤器
         if ((zuulResp != null)&&(! (endpoint instanceof ProxyEndpoint))) {
             invokeNextStage(zuulResp);
         }
     }
+
+
 
 
 

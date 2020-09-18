@@ -2,6 +2,6 @@ package org.cloud.gateway.netty.service;
 
 public class State {
 
-    long inboundBodySize = 0;
-    long outboundBodySize = 0;
+   public long inboundBodySize = 0;
+    public long outboundBodySize = 0;
 }

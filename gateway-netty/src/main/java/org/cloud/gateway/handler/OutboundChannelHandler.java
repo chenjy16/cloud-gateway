@@ -1,14 +1,17 @@
-package org.cloud.gateway.netty.service;
+package org.cloud.gateway.handler;
 
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.ChannelOutboundHandlerAdapter;
+import io.netty.channel.ChannelPromise;
 import io.netty.handler.codec.http.HttpContent;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.util.AttributeKey;
-import io.netty.channel.Channel;
+import org.cloud.gateway.netty.service.State;
+
+public  final class OutboundChannelHandler extends ChannelOutboundHandlerAdapter {
 
 
-public  final class InboundChannelHandler extends ChannelInboundHandlerAdapter {
     private static final AttributeKey<State> ATTR_STATE = AttributeKey.newInstance("_http_body_size_state");
 
     private static State getOrCreateCurrentState(Channel ch) {
@@ -25,40 +28,23 @@ public  final class InboundChannelHandler extends ChannelInboundHandlerAdapter {
         return state;
     }
 
-
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception{
+    public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
         State state = null;
 
-        // Reset the state as each new inbound request comes in.
+        // Reset the state as each new outbound request goes out.
         if (msg instanceof HttpRequest) {
             state = createNewState(ctx.channel());
         }
 
-        // Update the inbound body size with this chunk.
+        // Update the outbound body size with this chunk.
         if (msg instanceof HttpContent) {
             if (state == null) {
                 state = getOrCreateCurrentState(ctx.channel());
             }
-            state.inboundBodySize += ((HttpContent) msg).content().readableBytes();
+            state.outboundBodySize += ((HttpContent) msg).content().readableBytes();
         }
-
-        super.channelRead(ctx, msg);
+        super.write(ctx, msg, promise);
     }
-
-    @Override
-    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception
-    {
-        try {
-            super.userEventTriggered(ctx, evt);
-        }
-        finally {
-            if (evt instanceof HttpLifecycleChannelHandler.CompleteEvent) {
-                ctx.channel().attr(ATTR_STATE).set(null);
-            }
-        }
-    }
-
-
 
 }

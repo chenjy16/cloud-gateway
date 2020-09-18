@@ -1,25 +1,29 @@
-package org.cloud.gateway.netty.service;
+package org.cloud.gateway.message;
+
+import com.google.common.base.Charsets;
+import com.google.common.base.Strings;
+import com.netflix.config.DynamicIntProperty;
+import com.netflix.config.DynamicPropertyFactory;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.handler.codec.http.DefaultLastHttpContent;
+import io.netty.handler.codec.http.HttpContent;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.LastHttpContent;
+import org.cloud.gateway.netty.filter.GatewayFilter;
+import org.cloud.gateway.netty.service.SessionContext;
+
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.netflix.config.DynamicIntProperty;
-import com.netflix.config.DynamicPropertyFactory;
-import io.netty.buffer.*;
-import io.netty.handler.codec.Headers;
-import io.netty.handler.codec.http.DefaultLastHttpContent;
-import io.netty.handler.codec.http.HttpContent;
-import io.netty.handler.codec.http.HttpHeaderNames;
-import io.netty.handler.codec.http.LastHttpContent;
-import com.google.common.base.Charsets;
-import com.google.common.base.Strings;
-
-public class GatewayMessageImpl implements ZuulMessage {
+public class GatewayMessageImpl implements GatewayMessage {
 
 
     protected static final DynamicIntProperty MAX_BODY_SIZE_PROP = DynamicPropertyFactory.getInstance().getIntProperty(
             "zuul.message.body.max.size", 25 * 1000 * 1024);
+
     private static final Charset CS_UTF8 = Charset.forName("UTF-8");
 
     protected final SessionContext context;
@@ -39,6 +43,10 @@ public class GatewayMessageImpl implements ZuulMessage {
         this.headers = headers == null ? new Headers() : headers;
         this.bodyChunks = new ArrayList<>(16);
     }
+
+
+
+
 
     @Override
     public SessionContext getContext() {
@@ -177,7 +185,7 @@ public class GatewayMessageImpl implements ZuulMessage {
     }
 
     @Override
-    public void runBufferedBodyContentThroughFilter(ZuulFilter filter) {
+    public void runBufferedBodyContentThroughFilter(GatewayFilter filter) {
         //Loop optimized for the common case: Most filters' processContentChunk() return
         // original chunk passed in as is without any processing
         for (int i=0; i < bodyChunks.size(); i++) {
@@ -195,7 +203,7 @@ public class GatewayMessageImpl implements ZuulMessage {
     }
 
     @Override
-    public ZuulMessage clone() {
+    public GatewayMessage clone() {
         final GatewayMessageImpl copy = new GatewayMessageImpl(context.clone(), headers.clone());
         this.bodyChunks.forEach(chunk -> {
             chunk.retain();

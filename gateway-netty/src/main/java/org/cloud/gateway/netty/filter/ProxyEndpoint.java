@@ -191,15 +191,8 @@ public class ProxyEndpoint  extends SyncGatewayFilterAdapter<HttpRequestMessage,
     }
 
 
-
-
-
     OriginResponseReceiver getOriginResponseReceiver() {
         return new OriginResponseReceiver(this);
     }
-
-
-
-
 
 }

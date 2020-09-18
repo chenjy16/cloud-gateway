@@ -16,6 +16,10 @@ public class GatewayFilterChainRunner<T extends GatewayMessage> extends BaseGate
     }
 
 
+    public GatewayFilterChainRunner(GatewayFilter<T, T>[] gwfilters) {
+        this(null, gwfilters);
+    }
+
 
     @Override
     public void filter(final T inMesg) {
@@ -23,10 +27,15 @@ public class GatewayFilterChainRunner<T extends GatewayMessage> extends BaseGate
     }
 
 
-
+    
+    
+    /**
+     * @desc   
+     * @author chenjianyu944@gmail.com
+     * @date   2020/9/17 11:18
+     **/
     @Override
     public void filter(T inMesg, HttpContent chunk) {
-
         final AtomicInteger runningFilterIdx = getRunningFilterIndex(inMesg);
         final int limit = runningFilterIdx.get();
         if (limit >= filters.length) {
@@ -47,7 +56,11 @@ public class GatewayFilterChainRunner<T extends GatewayMessage> extends BaseGate
 
 
 
-
+    /**
+     * @desc
+     * @author chenjianyu944@gmail.com
+     * @date   2020/9/17 11:18
+     **/
     private final void runFilters(final T mesg, final AtomicInteger runningFilterIdx) {
         T inMesg = mesg;
         int i = runningFilterIdx.get();
