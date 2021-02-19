@@ -1,6 +1,5 @@
 package org.cloud.gateway.transport.webflux.handler;
 import com.google.common.collect.Maps;
-import org.cloud.gateway.common.exception.CommonErrorCode;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.DefaultErrorWebExceptionHandler;
@@ -46,7 +45,7 @@ public class GlobalErrorHandler extends DefaultErrorWebExceptionHandler {
     private static Map<String, Object> response(final int status) {
         Map<String, Object> map = Maps.newHashMapWithExpectedSize(3);
         map.put("code", status);
-        map.put("message", CommonErrorCode.ERROR_MSG);
+        map.put("message", -1);
         map.put("data", null);
         return map;
     }

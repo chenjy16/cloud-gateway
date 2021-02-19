@@ -1,5 +1,4 @@
 package org.cloud.gateway.transport.webflux.plugin.before;
-
 import com.google.common.io.ByteStreams;
 import io.netty.buffer.UnpooledByteBufAllocator;
 import org.springframework.core.io.buffer.DataBuffer;
@@ -25,14 +24,14 @@ public class GwServerHttpRequestDecorator extends ServerHttpRequestDecorator {
         Flux<DataBuffer> flux = super.getBody();
 
         if (requiresIsNeedBody(delegate.getMethod())){
-            body=flux.publishOn(single()).map(dataBuffer ->handleStream());
+            body=flux.publishOn(single()).map(dataBuffer ->handleStream(delegate,dataBuffer));
         }else{
             body=flux;
         }
     }
 
 
-    private DataBuffer handleStream(org.springframework.http.server.ServerHttpRequest delegate,DataBuffer buffer){
+    private DataBuffer handleStream(ServerHttpRequest delegate,DataBuffer buffer){
         String path=delegate.getURI().getPath();
 
         try {

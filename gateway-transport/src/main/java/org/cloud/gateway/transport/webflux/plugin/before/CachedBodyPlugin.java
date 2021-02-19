@@ -1,5 +1,5 @@
 package org.cloud.gateway.transport.webflux.plugin.before;
-import org.cloud.gateway.common.enums.PluginTypeEnum;
+import org.cloud.gateway.core.enums.PluginTypeEnum;
 import org.cloud.gateway.transport.webflux.plugin.PluginChain;
 import org.cloud.gateway.transport.webflux.plugin.Plugin;
 import org.springframework.web.server.ServerWebExchange;
@@ -30,7 +30,7 @@ public class CachedBodyPlugin implements Plugin {
 
     @Override
     public PluginTypeEnum pluginType() {
-        return null;
+        return PluginTypeEnum.FUNCTION;
     }
 
     @Override

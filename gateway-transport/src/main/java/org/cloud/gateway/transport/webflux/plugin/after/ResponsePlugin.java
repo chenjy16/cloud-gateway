@@ -1,14 +1,7 @@
 package org.cloud.gateway.transport.webflux.plugin.after;
-
-import org.cloud.gateway.common.constant.Constants;
-import org.cloud.gateway.common.enums.PluginTypeEnum;
-import org.cloud.gateway.common.enums.RpcTypeEnum;
-import org.cloud.gateway.common.exception.SoulException;
-import org.cloud.gateway.common.result.SoulResult;
-import org.cloud.gateway.common.utils.JsonUtils;
+import org.cloud.gateway.core.enums.PluginTypeEnum;
 import org.cloud.gateway.transport.webflux.plugin.PluginChain;
 import org.cloud.gateway.transport.webflux.plugin.Plugin;
-import org.cloud.gateway.web.plugin.SoulPlugin;
 import org.springframework.core.Ordered;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.reactive.function.BodyExtractors;

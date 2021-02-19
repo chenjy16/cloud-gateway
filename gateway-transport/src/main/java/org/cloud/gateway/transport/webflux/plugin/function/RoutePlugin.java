@@ -1,6 +1,8 @@
 package org.cloud.gateway.transport.webflux.plugin.function;
 import com.google.common.eventbus.Subscribe;
 import lombok.extern.slf4j.Slf4j;
+import org.cloud.gateway.core.enums.PluginEnum;
+import org.cloud.gateway.core.enums.PluginTypeEnum;
 import org.cloud.gateway.core.rule.RouteRule;
 import org.cloud.gateway.orchestration.internal.registry.config.event.PluginChangedEvent;
 import org.cloud.gateway.transport.webflux.plugin.AbstractPlugin;
