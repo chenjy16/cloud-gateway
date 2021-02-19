@@ -1,20 +1,16 @@
 package org.cloud.gateway.transport.config;
-
-import org.cloud.gateway.cache.UpstreamCacheManager;
-import org.cloud.gateway.cache.ZookeeperCacheManager;
-import org.cloud.gateway.web.disruptor.publisher.SoulEventPublisher;
+import com.google.common.collect.Lists;
+import org.cloud.gateway.orchestration.config.OrchestrationConfiguration;
+import org.cloud.gateway.orchestration.internal.registry.GatewayOrchestrationFacade;
+import org.cloud.gateway.orchestration.reg.api.RegistryCenterConfiguration;
 import org.cloud.gateway.transport.webflux.filter.StreamWebFilter;
 import org.cloud.gateway.transport.webflux.handler.GatewayHandlerMapping;
 import org.cloud.gateway.transport.webflux.handler.GatewayWebHandler;
-
 import org.cloud.gateway.transport.webflux.plugin.Plugin;
-
 import org.cloud.gateway.transport.webflux.plugin.after.ResponsePlugin;
-
 import org.cloud.gateway.transport.webflux.plugin.before.CachedBodyPlugin;
 import org.cloud.gateway.transport.webflux.plugin.function.RoutePlugin;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -31,30 +27,28 @@ import java.util.stream.Collectors;
 @ComponentScan("org.cloud.gateway")
 public class GatewayConfiguration {
 
-    private final ZookeeperCacheManager zookeeperCacheManager;
 
-
-
-    private final UpstreamCacheManager upstreamCacheManager;
-
-
-    @Autowired(required = false)
-    public GatewayConfiguration(final ZookeeperCacheManager zookeeperCacheManager,
-                                final SoulEventPublisher soulEventPublisher,
-                                final UpstreamCacheManager upstreamCacheManager) {
-        this.zookeeperCacheManager = zookeeperCacheManager;
-        this.upstreamCacheManager = upstreamCacheManager;
+    @Bean
+    public GatewayOrchestrationFacade gatewayOrchestrationFacade(@Qualifier OrchestrationConfiguration orchestrationConfiguration) {
+        GatewayOrchestrationFacade gatewayOrchestrationFacade =new GatewayOrchestrationFacade(orchestrationConfiguration, Lists.newArrayList(""));
+        gatewayOrchestrationFacade.init();
+        return gatewayOrchestrationFacade;
     }
 
+    @Bean
+    public OrchestrationConfiguration orchestrationConfiguration(@Qualifier RegistryCenterConfiguration registryCenterConfiguration) {
+        return new OrchestrationConfiguration("",registryCenterConfiguration,false);
+    }
 
-
-
-
+    @Bean
+    public RegistryCenterConfiguration registryCenterConfiguration() {
+        return new RegistryCenterConfiguration();
+    }
 
 
     @Bean
     public Plugin routePlugin() {
-        return new RoutePlugin(zookeeperCacheManager, upstreamCacheManager);
+        return new RoutePlugin();
     }
 
 

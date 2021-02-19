@@ -1,5 +1,4 @@
 package org.cloud.gateway.transport.webflux.balance.factory;
-
 import org.cloud.gateway.transport.webflux.balance.LoadBalance;
 import org.cloud.gateway.transport.webflux.balance.spi.RandomLoadBalance;
 import java.util.Objects;

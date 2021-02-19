@@ -13,7 +13,7 @@
         <module>gateway-admin</module>
         <module>gateway-core</module>
         <module>gateway-transport</module>
-        <module>gateway-configuration</module>
+        <module>gateway-orchestration</module>
         <module>gateway-spring-boot-starter</module>
         <module>gateway-bootstrap</module>
 
@@ -55,6 +55,8 @@
         <dubbo.version>2.6.0</dubbo.version>
         <gson.version>2.8.0</gson.version>
         <okhttp.version>3.7.0</okhttp.version>
+        <curator.version>2.10.0</curator.version>
+        <snakeyaml.version>1.16</snakeyaml.version>
     </properties>
 
     <dependencyManagement>
@@ -78,10 +80,21 @@
                 <version>${project.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.cloud</groupId>
+                <artifactId>gateway-orchestration</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.cloud</groupId>
-                <artifactId>gateway-configuration</artifactId>
+                <artifactId>gateway-orchestration-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.cloud</groupId>
+                <artifactId>gateway-orchestration-reg-zookeeper-curator</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -204,18 +217,38 @@
                 <artifactId>zookeeper</artifactId>
                 <version>3.4.9</version>
             </dependency>
-            <dependency>
-                <groupId>com.101tec</groupId>
-                <artifactId>zkclient</artifactId>
-                <version>0.10</version>
-            </dependency>
 
             <dependency>
                 <groupId>com.github.pagehelper</groupId>
                 <artifactId>pagehelper</artifactId>
                 <version>${pagehelper.version}</version>
             </dependency>
-      
+            <dependency>
+                <groupId>org.apache.curator</groupId>
+                <artifactId>curator-framework</artifactId>
+                <version>${curator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.curator</groupId>
+                <artifactId>curator-client</artifactId>
+                <version>${curator.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>netty</artifactId>
+                        <groupId>io.netty</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.curator</groupId>
+                <artifactId>curator-recipes</artifactId>
+                <version>${curator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>${snakeyaml.version}</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>
@@ -230,6 +263,49 @@
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-library</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+
+
+    </dependencies>
 
     <build>
         <plugins>

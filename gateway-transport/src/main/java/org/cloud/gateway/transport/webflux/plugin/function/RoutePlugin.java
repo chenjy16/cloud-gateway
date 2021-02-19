@@ -1,74 +1,43 @@
-/*
- *   Licensed to the Apache Software Foundation (ASF) under one or more
- *   contributor license agreements.  See the NOTICE file distributed with
- *   this work for additional information regarding copyright ownership.
- *   The ASF licenses this file to You under the Apache License, Version 2.0
- *   (the "License"); you may not use this file except in compliance with
- *   the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
- *
- */
-
 package org.cloud.gateway.transport.webflux.plugin.function;
+import com.google.common.eventbus.Subscribe;
+import lombok.extern.slf4j.Slf4j;
+import org.cloud.gateway.core.rule.RouteRule;
+import org.cloud.gateway.orchestration.internal.registry.config.event.PluginChangedEvent;
 import org.cloud.gateway.transport.webflux.plugin.AbstractPlugin;
 import org.cloud.gateway.transport.webflux.plugin.PluginChain;
-import org.cloud.gateway.common.constant.Constants;
-import org.cloud.gateway.common.dto.convert.rule.DivideRuleHandle;
-import org.cloud.gateway.common.dto.zk.RuleZkDTO;
-import org.cloud.gateway.common.dto.zk.SelectorZkDTO;
-import org.cloud.gateway.common.enums.PluginEnum;
-import org.cloud.gateway.common.enums.PluginTypeEnum;
-import org.cloud.gateway.common.utils.GSONUtils;
-import org.cloud.gateway.cache.UpstreamCacheManager;
-import org.cloud.gateway.cache.ZookeeperCacheManager;
-import org.cloud.gateway.webflux.request.RequestDTO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
-
-
 import java.time.Duration;
 
-
+@Slf4j
 public class RoutePlugin extends AbstractPlugin {
 
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RoutePlugin.class);
+    private RouteRule routeRule;
 
-    private final UpstreamCacheManager upstreamCacheManager;
+    private WebClient webClient=WebClient.create();
 
 
-    public RoutePlugin(final ZookeeperCacheManager zookeeperCacheManager, final UpstreamCacheManager upstreamCacheManager) {
-        super(zookeeperCacheManager);
-        this.upstreamCacheManager = upstreamCacheManager;
+
+
+    @Subscribe
+    public synchronized void renew(final PluginChangedEvent ConfigMapChangedEvent) {
+        routeRule=null;
     }
 
+
+
     @Override
-    protected Mono<Void> doExecute(final ServerWebExchange exchange, final PluginChain chain, final SelectorZkDTO selector, final RuleZkDTO rule) {
-        final RequestDTO requestDTO = exchange.getAttribute(Constants.REQUESTDTO);
-
-        final DivideRuleHandle ruleHandle = GSONUtils.getInstance().fromJson(rule.getHandle(), DivideRuleHandle.class);
-
-
-
-
+    protected Mono<Void> doExecute(final ServerWebExchange exchange, final PluginChain chain) {
+            return null;
     }
 
     private Mono<Void> proxyRequest(ServerWebExchange exchange,PluginChain chain,String url,Integer timeout){
 
         ServerHttpResponse gatewayResp=exchange.getResponse();
-
         WebClient.RequestHeadersSpec<?> headersSpec=httpReqBuild(exchange,url);
         return headersSpec.exchange()
                 .timeout(Duration.ofMillis(timeout)).doOnError(ex->{
@@ -86,7 +55,6 @@ public class RoutePlugin extends AbstractPlugin {
                 });
     }
 
-    WebClient webClient=WebClient.create();
 
     private WebClient.RequestHeadersSpec<?> httpReqBuild(ServerWebExchange exchange,String url){
         HttpMethod method=exchange.getRequest().getMethod();

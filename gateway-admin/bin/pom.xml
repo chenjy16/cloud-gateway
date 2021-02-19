@@ -142,7 +142,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>org.cloud.gateway.admin.SoulAdminApplication</mainClass>
+                    <mainClass>org.cloud.gateway.admin.GatewayAdminApplication</mainClass>
                     <executable>true</executable>
                 </configuration>
             </plugin>

@@ -1,5 +1,4 @@
 package org.cloud.gateway.transport.webflux.plugin.before;
-
 import org.cloud.gateway.common.enums.PluginTypeEnum;
 import org.cloud.gateway.transport.webflux.plugin.PluginChain;
 import org.cloud.gateway.transport.webflux.plugin.Plugin;
@@ -8,15 +7,12 @@ import reactor.core.publisher.Mono;
 
 import java.awt.image.DataBuffer;
 
-/**
- * Created by cjy on 2020/1/22.
- */
+
 public class CachedBodyPlugin implements Plugin {
 
 
     @Override
     public Mono<Void> execute(ServerWebExchange exchange, PluginChain chain) {
-
        DataBuffer body= exchange.getAttributeOrDefault("Cached_req_body_attr", null);
        if(body!=null){
 
