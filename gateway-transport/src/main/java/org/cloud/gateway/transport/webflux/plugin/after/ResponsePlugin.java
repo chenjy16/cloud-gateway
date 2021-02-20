@@ -8,7 +8,6 @@ import org.springframework.web.reactive.function.BodyExtractors;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
-
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
@@ -20,10 +19,8 @@ public class ResponsePlugin implements Plugin {
     public Mono<Void> execute(final ServerWebExchange exchange, final PluginChain chain) {
 
         return chain.execute(exchange).then(Mono.defer(() -> {
-
             ServerHttpResponse response = exchange.getResponse();
-
-            ClientResponse clientResponse = exchange.getAttribute("");
+            ClientResponse clientResponse = exchange.getAttribute("clientResponse");
 
             if(Objects.nonNull(clientResponse)){
                 clientResponse.headers().asHttpHeaders().forEach((k,v)->{
@@ -31,7 +28,7 @@ public class ResponsePlugin implements Plugin {
                 });
                 return response.writeWith(clientResponse.body(BodyExtractors.toDataBuffers()));
             }
-            return response.writeWith(Mono.just(exchange.getResponse().bufferFactory().wrap("".getBytes(StandardCharsets.UTF_8))));
+            return response.writeWith(Mono.just(exchange.getResponse().bufferFactory().wrap("后端服务响应异常".getBytes(StandardCharsets.UTF_8))));
         }));
 
     }
@@ -50,7 +47,7 @@ public class ResponsePlugin implements Plugin {
 
     @Override
     public String named() {
-        return "";
+        return "GatewayResponse";
     }
 
 }

@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.cloud.gateway.core.enums.PluginEnum;
 import org.cloud.gateway.core.enums.PluginTypeEnum;
 import org.cloud.gateway.core.rule.RouteRule;
-import org.cloud.gateway.orchestration.internal.registry.config.event.PluginChangedEvent;
+import org.cloud.gateway.orchestration.reg.listener.DataChangedEvent;
 import org.cloud.gateway.transport.webflux.plugin.AbstractPlugin;
 import org.cloud.gateway.transport.webflux.plugin.PluginChain;
 import org.springframework.http.HttpMethod;
@@ -17,42 +17,31 @@ import java.time.Duration;
 @Slf4j
 public class RoutePlugin extends AbstractPlugin {
 
-
     private RouteRule routeRule;
 
     private WebClient webClient=WebClient.create();
 
 
-
-
     @Subscribe
-    public synchronized void renew(final PluginChangedEvent ConfigMapChangedEvent) {
+    public synchronized void renew(final DataChangedEvent dataChangedEvent) {
         routeRule=null;
     }
 
-
-
     @Override
     protected Mono<Void> doExecute(final ServerWebExchange exchange, final PluginChain chain) {
-            return null;
+        return proxyRequest(exchange,chain,"",3000);
     }
 
     private Mono<Void> proxyRequest(ServerWebExchange exchange,PluginChain chain,String url,Integer timeout){
-
         ServerHttpResponse gatewayResp=exchange.getResponse();
         WebClient.RequestHeadersSpec<?> headersSpec=httpReqBuild(exchange,url);
         return headersSpec.exchange()
                 .timeout(Duration.ofMillis(timeout)).doOnError(ex->{
-                   /* if(ex instanceof TimeoutException){
-
-
-                    }else{
-
-                    } */
-                }).flatMap(backendResponse->{
-                    gatewayResp.setStatusCode(backendResponse.statusCode());
-                    gatewayResp.getHeaders().putAll(backendResponse.headers().asHttpHeaders());
-                    exchange.getAttributes().put("",backendResponse);
+                   log.error("后的服务异常：{}",ex);
+                }).flatMap(clientResponse->{
+                    gatewayResp.setStatusCode(clientResponse.statusCode());
+                    gatewayResp.getHeaders().putAll(clientResponse.headers().asHttpHeaders());
+                    exchange.getAttributes().put("clientResponse",clientResponse);
                     return chain.execute(exchange);
                 });
     }
@@ -62,11 +51,11 @@ public class RoutePlugin extends AbstractPlugin {
         HttpMethod method=exchange.getRequest().getMethod();
         WebClient.RequestBodySpec bodySpec=this.webClient.method(method).uri(url).headers(httpHeaders->{
            httpHeaders.addAll(exchange.getRequest().getHeaders());
-            httpHeaders.remove(httpHeaders.HOST);
+            //httpHeaders.remove(httpHeaders.HOST);
         });
         WebClient.RequestHeadersSpec headersSpec;
         if(requiresIsNeedBody(method)){
-            String bodyString=exchange.getAttribute("");
+            String bodyString=exchange.getAttribute("Cached_req_body_attr");
             headersSpec=bodySpec.syncBody(bodyString);
         }else{
             headersSpec=bodySpec;
@@ -89,13 +78,12 @@ public class RoutePlugin extends AbstractPlugin {
 
     @Override
     public String named() {
-        return PluginEnum.DIVIDE.getName();
+        return PluginEnum.ROUTE.getName();
     }
 
 
     @Override
     public Boolean skip(final ServerWebExchange exchange) {
-
         return null;
     }
 
@@ -107,7 +95,7 @@ public class RoutePlugin extends AbstractPlugin {
 
     @Override
     public int getOrder() {
-        return PluginEnum.DIVIDE.getCode();
+        return PluginEnum.ROUTE.getCode();
     }
 
 }

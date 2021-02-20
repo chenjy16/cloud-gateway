@@ -9,9 +9,11 @@ import java.util.Arrays;
 public enum PluginEnum {
 
 
+    CACHEDBODY(0, "cachedbody"),
+
     GLOBAL(1, "global"),
 
-    DIVIDE(50, "divide");
+    ROUTE(50, "route");
 
     private final int code;
 
