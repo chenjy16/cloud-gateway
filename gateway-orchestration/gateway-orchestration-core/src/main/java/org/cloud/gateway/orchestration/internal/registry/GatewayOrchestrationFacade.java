@@ -19,14 +19,14 @@ public final class GatewayOrchestrationFacade implements AutoCloseable {
 
     private final GatewayOrchestrationListenerManager listenerManager;
     
-    public GatewayOrchestrationFacade(final OrchestrationConfiguration orchestrationConfig, final Collection<String> gatewaySchemaNames) {
+    public GatewayOrchestrationFacade(final OrchestrationConfiguration orchestrationConfig) {
 
         regCenter = RegistryCenterLoader.load(orchestrationConfig.getRegCenterConfig());
 
         configService = new ConfigurationService(orchestrationConfig.getName(), regCenter);
 
-        listenerManager = gatewaySchemaNames.isEmpty() ? new GatewayOrchestrationListenerManager(orchestrationConfig.getName(), regCenter, configService.getAllShardingSchemaNames())
-                : new GatewayOrchestrationListenerManager(orchestrationConfig.getName(), regCenter, gatewaySchemaNames);
+        listenerManager = new GatewayOrchestrationListenerManager(orchestrationConfig.getName(), regCenter);
+
     }
 
 

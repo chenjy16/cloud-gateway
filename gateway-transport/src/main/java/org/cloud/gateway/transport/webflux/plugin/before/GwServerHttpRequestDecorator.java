@@ -17,6 +17,7 @@ import static reactor.core.scheduler.Schedulers.single;
 public class GwServerHttpRequestDecorator extends ServerHttpRequestDecorator {
     private Flux<DataBuffer> body;
 
+
     public GwServerHttpRequestDecorator(ServerHttpRequest delegate) {
         super(delegate);
 
@@ -30,6 +31,15 @@ public class GwServerHttpRequestDecorator extends ServerHttpRequestDecorator {
     }
 
 
+    /**
+     * @Desc:
+     * @param       delegate
+     * @param       buffer
+     * @return:     org.springframework.core.io.buffer.DataBuffer
+     * @author:     chenjianyu944
+     * @Date:       2021/2/22 13:18
+     *
+     */
     private DataBuffer handleStream(ServerHttpRequest delegate,DataBuffer buffer){
         String path=delegate.getURI().getPath();
 

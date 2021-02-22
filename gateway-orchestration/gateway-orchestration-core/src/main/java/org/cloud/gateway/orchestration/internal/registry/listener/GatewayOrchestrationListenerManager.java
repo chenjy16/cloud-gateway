@@ -10,13 +10,11 @@ public final class GatewayOrchestrationListenerManager {
     private final ConfigurationChangedListenerManager configurationChangedListenerManager;
 
     
-    public GatewayOrchestrationListenerManager(final String name, final RegistryCenter regCenter, final Collection<String> shardingSchemaNames) {
-        configurationChangedListenerManager = new ConfigurationChangedListenerManager(name, regCenter, shardingSchemaNames);
+    public GatewayOrchestrationListenerManager(final String name, final RegistryCenter regCenter) {
+        configurationChangedListenerManager = new ConfigurationChangedListenerManager(name, regCenter);
     }
     
-    /**
-     * Initialize all orchestration listeners.
-     */
+
     public void initListeners() {
         configurationChangedListenerManager.initListeners();
     }

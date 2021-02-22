@@ -1,3 +1,0 @@
-org.cloud.gateway.web.balance.spi.RandomLoadBalance
-org.cloud.gateway.web.balance.spi.RoundRobinLoadBalance
-org.cloud.gateway.web.balance.spi.HashLoadBalance

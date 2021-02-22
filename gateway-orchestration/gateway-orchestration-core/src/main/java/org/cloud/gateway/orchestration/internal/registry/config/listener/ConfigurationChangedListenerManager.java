@@ -8,18 +8,18 @@ import java.util.Collection;
 
 public final class ConfigurationChangedListenerManager {
 
-    private final RouteChangedListener propertiesChangedListener;
-    private final PluginChangedListener configMapChangedListener;
+    private final RouteChangedListener routeChangedListener;
+    private final PluginChangedListener pluginChangedListener;
 
 
-    public ConfigurationChangedListenerManager(final String name, final RegistryCenter regCenter, final Collection<String> shardingSchemaNames) {
-        propertiesChangedListener = new RouteChangedListener(name, regCenter);
-        configMapChangedListener = new PluginChangedListener(name, regCenter);
+    public ConfigurationChangedListenerManager(final String name, final RegistryCenter regCenter) {
+        routeChangedListener = new RouteChangedListener(name, regCenter);
+        pluginChangedListener = new PluginChangedListener(name, regCenter);
     }
     
 
     public void initListeners() {
-        propertiesChangedListener.watch(ChangedType.UPDATED);
-        configMapChangedListener.watch(ChangedType.UPDATED);
+        routeChangedListener.watch(ChangedType.UPDATED,ChangedType.DELETED);
+        pluginChangedListener.watch(ChangedType.UPDATED,ChangedType.DELETED);
     }
 }

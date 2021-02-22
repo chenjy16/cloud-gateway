@@ -30,7 +30,7 @@ public class GatewayConfiguration {
 
     @Bean
     public GatewayOrchestrationFacade gatewayOrchestrationFacade(@Qualifier OrchestrationConfiguration orchestrationConfiguration) {
-        GatewayOrchestrationFacade gatewayOrchestrationFacade =new GatewayOrchestrationFacade(orchestrationConfiguration, Lists.newArrayList(""));
+        GatewayOrchestrationFacade gatewayOrchestrationFacade =new GatewayOrchestrationFacade(orchestrationConfiguration);
         gatewayOrchestrationFacade.init();
         return gatewayOrchestrationFacade;
     }
@@ -47,8 +47,8 @@ public class GatewayConfiguration {
 
 
     @Bean
-    public Plugin routePlugin() {
-        return new RoutePlugin();
+    public Plugin routePlugin(@Qualifier GatewayOrchestrationFacade gatewayOrchestrationFacade) {
+        return new RoutePlugin(gatewayOrchestrationFacade);
     }
 
 

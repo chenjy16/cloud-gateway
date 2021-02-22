@@ -12,6 +12,10 @@
     <dependencies>
         <dependency>
             <groupId>org.cloud</groupId>
+            <artifactId>gateway-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.cloud</groupId>
             <artifactId>gateway-orchestration-reg-api</artifactId>
             <version>1.0.2-RELEASE</version>
         </dependency>

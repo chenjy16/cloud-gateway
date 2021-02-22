@@ -9,6 +9,15 @@ import reactor.core.publisher.Mono;
 public interface Plugin {
 
 
+    /**
+     * @Desc:       插件执行逻辑
+     * @param       exchange
+     * @param       chain
+     * @return:     reactor.core.publisher.Mono<java.lang.Void>
+     * @author:     chenjianyu944
+     * @Date:       2021/2/22 13:16
+     *
+     */
     Mono<Void> execute(ServerWebExchange exchange, PluginChain chain);
 
 

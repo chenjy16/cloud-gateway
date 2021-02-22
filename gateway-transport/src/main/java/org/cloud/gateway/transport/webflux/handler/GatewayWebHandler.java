@@ -17,13 +17,22 @@ public final class GatewayWebHandler implements WebHandler {
         this.plugins = plugins;
     }
 
-
+    /**
+     * @Desc:
+     * @param       exchange
+     * @return:     reactor.core.publisher.Mono<java.lang.Void>
+     * @author:     chenjianyu944
+     * @Date:       2021/2/22 13:16
+     *
+     */
     @Override
     public Mono<Void> handle(final ServerWebExchange exchange) {
         return new DefaultPluginChain(plugins)
                 .execute(exchange)
                 .doOnError(Throwable::printStackTrace);
     }
+
+
 
     private static class DefaultPluginChain implements PluginChain {
 

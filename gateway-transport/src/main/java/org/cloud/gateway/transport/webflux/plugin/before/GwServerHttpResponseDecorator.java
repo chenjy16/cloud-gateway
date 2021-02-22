@@ -1,5 +1,4 @@
 package org.cloud.gateway.transport.webflux.plugin.before;
-
 import com.google.common.io.ByteStreams;
 import io.netty.buffer.UnpooledByteBufAllocator;
 import org.reactivestreams.Publisher;
@@ -11,8 +10,6 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.http.server.reactive.ServerHttpResponseDecorator;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -32,6 +29,15 @@ public class GwServerHttpResponseDecorator extends ServerHttpResponseDecorator{
         return super.writeAndFlushWith(body);
     }
 
+
+    /**
+     * @Desc:
+     * @param       body
+     * @return:     reactor.core.publisher.Mono<java.lang.Void>
+     * @author:     chenjianyu944
+     * @Date:       2021/2/22 13:18
+     *
+     */
     @Override
     public Mono<Void> writeWith(Publisher<? extends DataBuffer> body) {
 
@@ -47,6 +53,14 @@ public class GwServerHttpResponseDecorator extends ServerHttpResponseDecorator{
     }
 
 
+    /**
+     * @Desc:
+     * @param       buffer
+     * @return:     org.springframework.core.io.buffer.DataBuffer
+     * @author:     chenjianyu944
+     * @Date:       2021/2/22 13:19
+     *
+     */
     public DataBuffer handleStream(DataBuffer buffer){
 
         try {
