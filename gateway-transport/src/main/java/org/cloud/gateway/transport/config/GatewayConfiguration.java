@@ -1,5 +1,4 @@
 package org.cloud.gateway.transport.config;
-import com.google.common.collect.Lists;
 import org.cloud.gateway.orchestration.config.OrchestrationConfiguration;
 import org.cloud.gateway.orchestration.internal.registry.GatewayOrchestrationFacade;
 import org.cloud.gateway.orchestration.reg.api.RegistryCenterConfiguration;
@@ -18,7 +17,6 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebHandler;
-
 import java.util.List;
 import java.util.stream.Collectors;
 

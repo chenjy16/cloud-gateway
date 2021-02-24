@@ -1,9 +1,12 @@
 package org.cloud.gateway.transport.webflux.plugin.function;
 import com.google.common.eventbus.Subscribe;
 import lombok.extern.slf4j.Slf4j;
+import org.cloud.gateway.core.algorithm.LoadBalanceAlgorithm;
+import org.cloud.gateway.core.algorithm.LoadBalanceFactory;
 import org.cloud.gateway.core.enums.PluginEnum;
 import org.cloud.gateway.core.enums.PluginTypeEnum;
 import org.cloud.gateway.core.rule.RouteRule;
+import org.cloud.gateway.core.strategy.RouteStrategyType;
 import org.cloud.gateway.orchestration.internal.registry.GatewayOrchestrationFacade;
 import org.cloud.gateway.orchestration.internal.registry.config.event.RouteChangedEvent;
 import org.cloud.gateway.transport.webflux.plugin.AbstractPlugin;
@@ -39,11 +42,15 @@ public class RoutePlugin extends AbstractPlugin {
     protected Mono<Void> doExecute(final ServerWebExchange exchange, final PluginChain chain) {
 
 
+        LoadBalanceAlgorithm lb=LoadBalanceFactory.of("");
+
+        RouteStrategyType.getDefaultRouteStrategyType().getRouteStrategy().match(null,exchange);
+
         return proxyRequest(exchange,chain,"",3000);
     }
 
     /**
-     * @Desc:
+     * @Desc:       转发请求
      * @param       exchange
      * @param       chain
      * @param       url
@@ -71,7 +78,7 @@ public class RoutePlugin extends AbstractPlugin {
 
 
     /**
-     * @Desc:
+     * @Desc:       构建转发请求体
      * @param       exchange
      * @param       url
      * @return:     org.springframework.web.reactive.function.client.WebClient.RequestHeadersSpec<?>
@@ -96,7 +103,7 @@ public class RoutePlugin extends AbstractPlugin {
     }
 
     /**
-     * @Desc:
+     * @Desc:       请求方式method
      * @param       method
      * @return:     boolean
      * @author:     chenjianyu944

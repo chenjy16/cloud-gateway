@@ -8,7 +8,7 @@ public interface PluginChain {
 
 
     /**
-     * @Desc:
+     * @Desc:       插件调用链
      * @param       exchange
      * @return:     reactor.core.publisher.Mono<java.lang.Void>
      * @author:     chenjianyu944

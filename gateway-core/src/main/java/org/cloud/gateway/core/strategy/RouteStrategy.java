@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface RouteStrategy {
 
-    Boolean match(List<ClusterConfiguration> clusterConfigurations, ServerWebExchange exchange);
+
+
+    List<ClusterConfiguration> match(List<ClusterConfiguration> clusterConfigurations, ServerWebExchange exchange);
 
 }

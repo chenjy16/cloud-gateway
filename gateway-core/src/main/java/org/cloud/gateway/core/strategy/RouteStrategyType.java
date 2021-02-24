@@ -1,8 +1,7 @@
 package org.cloud.gateway.core.strategy;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.cloud.gateway.core.algorithm.LoadBalanceAlgorithm;
-import org.cloud.gateway.core.algorithm.LoadBalanceAlgorithmType;
+
 
 @RequiredArgsConstructor
 @Getter

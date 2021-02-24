@@ -11,7 +11,7 @@ public class ClusterConfiguration {
     private String name;
     private String urlPattern;
     private String method;
-    private LoadBalanceAlgorithm loadBalanceAlgorithm;
+    private String loadBalanceAlgorithm;
     private List<ServerConfiguration> serverConfigurations;
 
 

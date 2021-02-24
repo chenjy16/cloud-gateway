@@ -20,9 +20,7 @@ public class GwServerHttpRequestDecorator extends ServerHttpRequestDecorator {
 
     public GwServerHttpRequestDecorator(ServerHttpRequest delegate) {
         super(delegate);
-
         Flux<DataBuffer> flux = super.getBody();
-
         if (requiresIsNeedBody(delegate.getMethod())){
             body=flux.publishOn(single()).map(dataBuffer ->handleStream(delegate,dataBuffer));
         }else{
@@ -31,18 +29,8 @@ public class GwServerHttpRequestDecorator extends ServerHttpRequestDecorator {
     }
 
 
-    /**
-     * @Desc:
-     * @param       delegate
-     * @param       buffer
-     * @return:     org.springframework.core.io.buffer.DataBuffer
-     * @author:     chenjianyu944
-     * @Date:       2021/2/22 13:18
-     *
-     */
-    private DataBuffer handleStream(ServerHttpRequest delegate,DataBuffer buffer){
-        String path=delegate.getURI().getPath();
 
+    private DataBuffer handleStream(ServerHttpRequest delegate,DataBuffer buffer){
         try {
             InputStream is=buffer.asInputStream();
             byte[] bytes= ByteStreams.toByteArray(is);

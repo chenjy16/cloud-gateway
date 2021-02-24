@@ -18,7 +18,7 @@ public final class GatewayWebHandler implements WebHandler {
     }
 
     /**
-     * @Desc:
+     * @Desc:       web server exchange 扩展
      * @param       exchange
      * @return:     reactor.core.publisher.Mono<java.lang.Void>
      * @author:     chenjianyu944

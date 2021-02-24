@@ -30,17 +30,9 @@ public class GwServerHttpResponseDecorator extends ServerHttpResponseDecorator{
     }
 
 
-    /**
-     * @Desc:
-     * @param       body
-     * @return:     reactor.core.publisher.Mono<java.lang.Void>
-     * @author:     chenjianyu944
-     * @Date:       2021/2/22 13:18
-     *
-     */
+
     @Override
     public Mono<Void> writeWith(Publisher<? extends DataBuffer> body) {
-
         MediaType contentType=super.getHeaders().getContentType();
         if(body instanceof Mono){
             Mono<DataBuffer> monoBody=(Mono<DataBuffer>)body;
@@ -53,14 +45,7 @@ public class GwServerHttpResponseDecorator extends ServerHttpResponseDecorator{
     }
 
 
-    /**
-     * @Desc:
-     * @param       buffer
-     * @return:     org.springframework.core.io.buffer.DataBuffer
-     * @author:     chenjianyu944
-     * @Date:       2021/2/22 13:19
-     *
-     */
+
     public DataBuffer handleStream(DataBuffer buffer){
 
         try {
@@ -71,10 +56,7 @@ public class GwServerHttpResponseDecorator extends ServerHttpResponseDecorator{
             return nettyDataBufferFactory.wrap(bytes);
         } catch (IOException e) {
             e.printStackTrace();
-
         }
-
         return null;
-
     }
 }

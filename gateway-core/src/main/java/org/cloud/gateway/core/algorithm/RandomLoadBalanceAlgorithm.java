@@ -1,12 +1,17 @@
 package org.cloud.gateway.core.algorithm;
-import java.util.List;
-import java.util.Random;
+import org.cloud.gateway.core.configuration.ClusterConfiguration;
+import org.cloud.gateway.core.configuration.ServerConfiguration;
+
 
 
 public final class RandomLoadBalanceAlgorithm implements LoadBalanceAlgorithm {
     
     @Override
-    public String getDataSource(final String name, final String masterDataSourceName, final List<String> slaveDataSourceNames) {
-        return slaveDataSourceNames.get(new Random().nextInt(slaveDataSourceNames.size()));
+    public ServerConfiguration select(final ClusterConfiguration clusterConfiguration, final String ip) {
+        return null;
+    }
+    @Override
+    public String algorithm() {
+        return null;
     }
 }
