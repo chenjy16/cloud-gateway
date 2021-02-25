@@ -19,7 +19,7 @@ public final class ConfigurationChangedListenerManager {
     
 
     public void initListeners() {
-        routeChangedListener.watch(ChangedType.UPDATED,ChangedType.DELETED);
-        pluginChangedListener.watch(ChangedType.UPDATED,ChangedType.DELETED);
+        routeChangedListener.watch(ChangedType.UPDATED,ChangedType.DELETED,ChangedType.ADDED);
+        pluginChangedListener.watch(ChangedType.UPDATED,ChangedType.DELETED,ChangedType.ADDED);
     }
 }

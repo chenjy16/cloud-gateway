@@ -28,7 +28,6 @@ public abstract class PostGatewayOrchestrationEventListener implements GatewayOr
             @Override
             public void onChange(final DataChangedEvent dataChangedEvent) {
                 if (watchedChangedTypeList.contains(dataChangedEvent.getChangedType())) {
-
                     eventBus.post(createShardingOrchestrationEvent(dataChangedEvent));
                 }
             }

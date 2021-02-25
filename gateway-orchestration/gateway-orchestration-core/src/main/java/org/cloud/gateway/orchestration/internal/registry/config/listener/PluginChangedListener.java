@@ -11,12 +11,12 @@ import org.cloud.gateway.orchestration.reg.listener.DataChangedEvent;
 public final class PluginChangedListener extends PostGatewayOrchestrationEventListener {
     
     public PluginChangedListener(final String name, final RegistryCenter regCenter) {
-        super(regCenter, new ConfigurationNode(name).getConfigMapPath());
+        super(regCenter, new ConfigurationNode(name).getPluginNode());
     }
     
     @Override
     protected PluginChangedEvent createShardingOrchestrationEvent(final DataChangedEvent event) {
-        return new PluginChangedEvent(ConfigurationYamlConverter.loadConfigMap(event.getValue()));
+        return new PluginChangedEvent(ConfigurationYamlConverter.loadPluginConfigurationMap(event.getValue()));
     }
 
 }

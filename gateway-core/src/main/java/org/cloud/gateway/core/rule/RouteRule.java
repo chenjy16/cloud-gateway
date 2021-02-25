@@ -3,13 +3,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.ToString;
 import org.cloud.gateway.core.configuration.ClusterConfiguration;
-import java.util.List;
+import java.util.Map;
+
 
 @AllArgsConstructor
 @Data
 @ToString
 public class RouteRule {
     private String name;
-    private final List<ClusterConfiguration> clusterConfigurations;
-
+    private Map<String, ClusterConfiguration> clusterConfigurationMap;
 }

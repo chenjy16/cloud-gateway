@@ -219,6 +219,8 @@ public final class CuratorZookeeperRegistryCenter implements RegistryCenter {
                 return DataChangedEvent.ChangedType.UPDATED;
             case NODE_REMOVED:
                 return DataChangedEvent.ChangedType.DELETED;
+            case NODE_ADDED:
+                return DataChangedEvent.ChangedType.ADDED;
             default:
                 return DataChangedEvent.ChangedType.IGNORED;
         }
@@ -245,11 +247,7 @@ public final class CuratorZookeeperRegistryCenter implements RegistryCenter {
         CloseableUtils.closeQuietly(client);
     }
     
-    /* TODO 等待500ms, cache先关闭再关闭client, 否则会抛异常
-     * 因为异步处理, 可能会导致client先关闭而cache还未关闭结束.
-     * 等待Curator新版本解决这个bug.
-     * BUG地址：https://issues.apache.org/jira/browse/CURATOR-157
-     */
+
     private void waitForCacheClose() {
         try {
             Thread.sleep(500L);

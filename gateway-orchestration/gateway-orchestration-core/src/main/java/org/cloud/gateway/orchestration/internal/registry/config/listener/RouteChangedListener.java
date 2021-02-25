@@ -10,11 +10,11 @@ import org.cloud.gateway.orchestration.reg.listener.DataChangedEvent;
 public final class RouteChangedListener extends PostGatewayOrchestrationEventListener {
     
     public RouteChangedListener(final String name, final RegistryCenter regCenter) {
-        super(regCenter, new ConfigurationNode(name).getPropsPath());
+        super(regCenter, new ConfigurationNode(name).getRulePath());
     }
     
     @Override
     protected RouteChangedEvent createShardingOrchestrationEvent(final DataChangedEvent event) {
-        return new RouteChangedEvent(ConfigurationYamlConverter.loadProperties(event.getValue()));
+        return new RouteChangedEvent(ConfigurationYamlConverter.loadClusterConfigurationMap(event.getValue()));
     }
 }

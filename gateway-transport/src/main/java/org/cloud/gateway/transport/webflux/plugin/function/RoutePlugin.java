@@ -28,24 +28,30 @@ public class RoutePlugin extends AbstractPlugin {
 
     public RoutePlugin(final GatewayOrchestrationFacade gatewayOrchestrationFacade) {
         super(gatewayOrchestrationFacade);
-        routeRule=null;
+        routeRule=gatewayOrchestrationFacade.getConfigService().loadRouteRule();
     }
 
 
-
+    /**
+     * @Desc:       路由配置变更
+     * @param       routeChangedEvent
+     * @return:     void
+     * @author:     chenjianyu944
+     * @Date:       2021/2/24 16:56
+     *
+     */
     @Subscribe
     public synchronized void renew(final RouteChangedEvent routeChangedEvent) {
-        routeRule=routeChangedEvent.getRouteRule();
+        routeRule=new RouteRule("",routeChangedEvent.getClusterConfigurationMap()) ;
     }
+
+
 
     @Override
     protected Mono<Void> doExecute(final ServerWebExchange exchange, final PluginChain chain) {
 
-
         LoadBalanceAlgorithm lb=LoadBalanceFactory.of("");
-
         RouteStrategyType.getDefaultRouteStrategyType().getRouteStrategy().match(null,exchange);
-
         return proxyRequest(exchange,chain,"",3000);
     }
 

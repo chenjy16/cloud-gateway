@@ -6,7 +6,15 @@ public class PluginConfiguration {
 
     private String id;
 
+    private String pluginId;
+
+    private String pluginName;
+
     private String name;
+
+    private Integer matchMode;
+
+    private Integer sort;
 
     private Boolean enabled;
 
