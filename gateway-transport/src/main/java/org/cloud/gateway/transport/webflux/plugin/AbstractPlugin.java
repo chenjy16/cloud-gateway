@@ -48,6 +48,7 @@ public abstract class AbstractPlugin implements Plugin {
         if (!(skip(exchange) || Objects.isNull(pluginConfiguration)   || !pluginConfiguration.getEnabled())) {
             return doExecute(exchange, chain);
         }
+
         return chain.execute(exchange);
     }
 

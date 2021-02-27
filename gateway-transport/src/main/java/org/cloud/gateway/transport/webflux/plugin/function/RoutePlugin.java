@@ -1,9 +1,11 @@
 package org.cloud.gateway.transport.webflux.plugin.function;
 import com.google.common.eventbus.Subscribe;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.cloud.gateway.core.algorithm.LoadBalanceAlgorithm;
 import org.cloud.gateway.core.algorithm.LoadBalanceFactory;
 import org.cloud.gateway.core.configuration.ClusterConfiguration;
+import org.cloud.gateway.core.configuration.ServerConfiguration;
 import org.cloud.gateway.core.enums.PluginEnum;
 import org.cloud.gateway.core.enums.PluginTypeEnum;
 import org.cloud.gateway.core.strategy.RouteStrategyType;
@@ -20,6 +22,8 @@ import reactor.core.publisher.Mono;
 import java.time.Duration;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class RoutePlugin extends AbstractPlugin {
@@ -53,11 +57,28 @@ public class RoutePlugin extends AbstractPlugin {
 
     @Override
     protected Mono<Void> doExecute(final ServerWebExchange exchange, final PluginChain chain) {
+        Optional<ClusterConfiguration>  clusterConfigurationOptional=RouteStrategyType.getDefaultRouteStrategyType().getRouteStrategy().match(clusterConfigurationMap.values().stream().collect(Collectors.toList()),exchange).stream().findFirst();
+        if(clusterConfigurationOptional.isPresent()){
+            LoadBalanceAlgorithm lb=LoadBalanceFactory.of(clusterConfigurationOptional.get().getLoadBalanceAlgorithm());
+            final String ip = Objects.requireNonNull(exchange.getRequest().getRemoteAddress()).getAddress().getHostAddress();
 
-        LoadBalanceAlgorithm lb=LoadBalanceFactory.of("");
-        RouteStrategyType.getDefaultRouteStrategyType().getRouteStrategy().match(null,exchange);
-        return proxyRequest(exchange,chain,"",3000);
+            ServerConfiguration serverConfiguration=lb.select(clusterConfigurationOptional.get(),ip);
+            return proxyRequest(exchange,chain,buildRealURL(serverConfiguration),3000);
+        }
+        return chain.execute(exchange);
     }
+
+
+
+    private String buildRealURL(final ServerConfiguration serverConfiguration) {
+        String protocol = serverConfiguration.getProtocol();
+        if (StringUtils.isBlank(protocol)) {
+            protocol = "http://";
+        }
+        return protocol + serverConfiguration.getAddr().trim();
+    }
+
+
 
     /**
      * @Desc:       转发请求
@@ -73,7 +94,6 @@ public class RoutePlugin extends AbstractPlugin {
     private Mono<Void> proxyRequest(ServerWebExchange exchange,PluginChain chain,String url,Integer timeout){
         ServerHttpResponse gatewayResp=exchange.getResponse();
         WebClient.RequestHeadersSpec<?> headersSpec=httpReqBuild(exchange,url);
-
         return headersSpec.exchange()
                 .timeout(Duration.ofMillis(timeout)).doOnError(ex->{
                    log.error("后的服务异常：{}",ex);
