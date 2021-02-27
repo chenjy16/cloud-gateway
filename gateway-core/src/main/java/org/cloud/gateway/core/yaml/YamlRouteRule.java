@@ -3,10 +3,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.cloud.gateway.core.configuration.ClusterConfiguration;
-import org.cloud.gateway.core.rule.RouteRule;
 
 import java.util.List;
-import java.util.Objects;
 
 @NoArgsConstructor
 @Getter

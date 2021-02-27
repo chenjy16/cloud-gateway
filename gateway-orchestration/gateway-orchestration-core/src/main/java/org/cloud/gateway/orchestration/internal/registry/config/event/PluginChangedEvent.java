@@ -10,5 +10,5 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Getter
 public final class PluginChangedEvent implements GatewayOrchestrationEvent {
-    private  final Map<String, PluginConfiguration> pluginConfigurationMap;
+    private  final PluginConfiguration pluginConfiguration;
 }

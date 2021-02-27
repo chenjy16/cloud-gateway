@@ -2,12 +2,13 @@ package org.cloud.gateway.transport.webflux.plugin;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import org.cloud.gateway.core.configuration.PluginConfiguration;
-import org.cloud.gateway.core.rule.PluginRule;
 import org.cloud.gateway.orchestration.internal.registry.GatewayOrchestrationFacade;
 import org.cloud.gateway.orchestration.internal.registry.config.event.PluginChangedEvent;
 import org.cloud.gateway.orchestration.internal.registry.eventbus.GatewayOrchestrationEventBus;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+
+import java.util.Map;
 import java.util.Objects;
 
 
@@ -15,11 +16,11 @@ public abstract class AbstractPlugin implements Plugin {
 
     private final EventBus eventBus = GatewayOrchestrationEventBus.getInstance();
 
-    private  PluginRule pluginRule;
+    private Map<String, PluginConfiguration> pluginConfigurationMap;
 
     public AbstractPlugin(GatewayOrchestrationFacade gatewayOrchestrationFacade) {
         eventBus.register(this);
-        this.pluginRule=gatewayOrchestrationFacade.getConfigService().loadPluginRule();
+        this.pluginConfigurationMap=gatewayOrchestrationFacade.getConfigService().loadPluginRule();
     }
 
 
@@ -32,15 +33,18 @@ public abstract class AbstractPlugin implements Plugin {
      *
      */
     @Subscribe
-    public synchronized void renew(final PluginChangedEvent pluginChangedEvent) {
-        this.pluginRule=new PluginRule("",pluginChangedEvent.getPluginConfigurationMap()) ;
+    public synchronized void changeConfiguration(final PluginChangedEvent pluginChangedEvent) {
+        if(Objects.nonNull(this.pluginConfigurationMap.get(pluginChangedEvent.getPluginConfiguration().getName()))){
+            this.pluginConfigurationMap.put(pluginChangedEvent.getPluginConfiguration().getName(),pluginChangedEvent.getPluginConfiguration());
+        }
+
     }
 
 
 
     @Override
     public Mono<Void> execute(final ServerWebExchange exchange, final PluginChain chain) {
-        PluginConfiguration pluginConfiguration=pluginRule.getPluginConfigurationMap().get(named());
+        PluginConfiguration pluginConfiguration=pluginConfigurationMap.get(named());
         if (!(skip(exchange) || Objects.isNull(pluginConfiguration)   || !pluginConfiguration.getEnabled())) {
             return doExecute(exchange, chain);
         }

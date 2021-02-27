@@ -3,9 +3,9 @@ import com.google.common.eventbus.Subscribe;
 import lombok.extern.slf4j.Slf4j;
 import org.cloud.gateway.core.algorithm.LoadBalanceAlgorithm;
 import org.cloud.gateway.core.algorithm.LoadBalanceFactory;
+import org.cloud.gateway.core.configuration.ClusterConfiguration;
 import org.cloud.gateway.core.enums.PluginEnum;
 import org.cloud.gateway.core.enums.PluginTypeEnum;
-import org.cloud.gateway.core.rule.RouteRule;
 import org.cloud.gateway.core.strategy.RouteStrategyType;
 import org.cloud.gateway.orchestration.internal.registry.GatewayOrchestrationFacade;
 import org.cloud.gateway.orchestration.internal.registry.config.event.RouteChangedEvent;
@@ -18,17 +18,19 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import java.time.Duration;
+import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 public class RoutePlugin extends AbstractPlugin {
 
-    private RouteRule routeRule;
+    private Map<String, ClusterConfiguration> clusterConfigurationMap;
 
     private final WebClient webClient=WebClient.create();
 
     public RoutePlugin(final GatewayOrchestrationFacade gatewayOrchestrationFacade) {
         super(gatewayOrchestrationFacade);
-        routeRule=gatewayOrchestrationFacade.getConfigService().loadRouteRule();
+        this.clusterConfigurationMap=gatewayOrchestrationFacade.getConfigService().loadRouteRule();
     }
 
 
@@ -41,8 +43,10 @@ public class RoutePlugin extends AbstractPlugin {
      *
      */
     @Subscribe
-    public synchronized void renew(final RouteChangedEvent routeChangedEvent) {
-        routeRule=new RouteRule("",routeChangedEvent.getClusterConfigurationMap()) ;
+    public synchronized void changeConfiguration(final RouteChangedEvent routeChangedEvent) {
+        if(Objects.nonNull(this.clusterConfigurationMap.get(routeChangedEvent.getClusterConfiguration().getId()))){
+            this.clusterConfigurationMap.put(routeChangedEvent.getClusterConfiguration().getId(),routeChangedEvent.getClusterConfiguration());
+        }
     }
 
 

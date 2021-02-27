@@ -1,13 +1,11 @@
 package org.cloud.gateway.orchestration.internal.registry.config.service;
 import org.cloud.gateway.core.configuration.ClusterConfiguration;
-import org.cloud.gateway.core.rule.PluginRule;
-import org.cloud.gateway.core.rule.RouteRule;
+import org.cloud.gateway.core.configuration.PluginConfiguration;
 import org.cloud.gateway.orchestration.internal.registry.config.node.ConfigurationNode;
 import org.cloud.gateway.orchestration.internal.registry.yaml.ConfigurationYamlConverter;
 import org.cloud.gateway.orchestration.reg.api.RegistryCenter;
-import java.util.Collection;
 import java.util.Map;
-import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 public final class ConfigurationService {
@@ -22,13 +20,20 @@ public final class ConfigurationService {
     }
 
 
-    public RouteRule loadRouteRule() {
-        return new RouteRule("",ConfigurationYamlConverter.loadClusterConfigurationMap(regCenter.getDirectly(configNode.getRulePath()))) ;
+    public Map<String, ClusterConfiguration> loadRouteRule() {
+        return regCenter.getChildrenKeys(configNode.getRulePath()).stream().map(c->{
+            return ConfigurationYamlConverter.loadClusterConfiguration(regCenter.getDirectly(c));
+        }).collect(Collectors.toConcurrentMap(x->x.getId(),y->y));
+
     }
 
 
-    public PluginRule loadPluginRule() {
-        return new PluginRule("",ConfigurationYamlConverter.loadPluginConfigurationMap(regCenter.getDirectly(configNode.getPluginNode()))) ;
+
+    public Map<String, PluginConfiguration> loadPluginRule() {
+
+        return regCenter.getChildrenKeys(configNode.getPluginNode()).stream().map(p->{
+            return ConfigurationYamlConverter.loadPluginConfiguration(regCenter.getDirectly(p));
+        }).collect(Collectors.toConcurrentMap(x->x.getName(),y->y));
     }
 
 }

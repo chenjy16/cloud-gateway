@@ -5,8 +5,6 @@ import lombok.NoArgsConstructor;
 import org.cloud.gateway.core.configuration.ClusterConfiguration;
 import org.cloud.gateway.core.configuration.PluginConfiguration;
 import org.yaml.snakeyaml.Yaml;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 
 
@@ -14,19 +12,16 @@ import java.util.Map;
 public final class ConfigurationYamlConverter {
 
 
+
     @SuppressWarnings("unchecked")
-    public static Map<String, ClusterConfiguration> loadClusterConfigurationMap(final String data) {
-        return Strings.isNullOrEmpty(data) ? new LinkedHashMap<String, ClusterConfiguration>() : (Map) new Yaml().load(data);
+    public static  ClusterConfiguration loadClusterConfiguration(final String data) {
+        return Strings.isNullOrEmpty(data) ? new ClusterConfiguration() : (ClusterConfiguration) new Yaml().load(data);
     }
 
 
     @SuppressWarnings("unchecked")
-    public static Map<String, PluginConfiguration> loadPluginConfigurationMap(final String data) {
-        return Strings.isNullOrEmpty(data) ? new LinkedHashMap<String, PluginConfiguration>() : (Map) new Yaml().load(data);
+    public static PluginConfiguration loadPluginConfiguration(final String data) {
+        return Strings.isNullOrEmpty(data) ? new PluginConfiguration() : (PluginConfiguration) new Yaml().load(data);
     }
-
-
-
-
 
 }

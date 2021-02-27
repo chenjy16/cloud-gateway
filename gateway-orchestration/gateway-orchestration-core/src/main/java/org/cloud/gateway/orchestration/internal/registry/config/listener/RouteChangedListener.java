@@ -15,6 +15,6 @@ public final class RouteChangedListener extends PostGatewayOrchestrationEventLis
     
     @Override
     protected RouteChangedEvent createShardingOrchestrationEvent(final DataChangedEvent event) {
-        return new RouteChangedEvent(ConfigurationYamlConverter.loadClusterConfigurationMap(event.getValue()));
+        return new RouteChangedEvent(ConfigurationYamlConverter.loadClusterConfiguration(event.getValue()));
     }
 }
