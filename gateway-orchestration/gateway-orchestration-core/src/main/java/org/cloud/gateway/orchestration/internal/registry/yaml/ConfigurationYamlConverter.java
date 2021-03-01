@@ -12,16 +12,23 @@ import org.yaml.snakeyaml.Yaml;
 public final class ConfigurationYamlConverter {
 
 
-
-    @SuppressWarnings("unchecked")
     public static  ClusterConfiguration loadClusterConfiguration(final String data) {
-        return Strings.isNullOrEmpty(data) ? new ClusterConfiguration() : (ClusterConfiguration) new Yaml().load(data);
+        return Strings.isNullOrEmpty(data) ? new ClusterConfiguration() : new Yaml().loadAs(data,ClusterConfiguration.class);
     }
 
 
-    @SuppressWarnings("unchecked")
+
     public static PluginConfiguration loadPluginConfiguration(final String data) {
-        return Strings.isNullOrEmpty(data) ? new PluginConfiguration() : (PluginConfiguration) new Yaml().load(data);
+        return Strings.isNullOrEmpty(data) ? new PluginConfiguration() : new Yaml().loadAs(data,PluginConfiguration.class);
+    }
+
+
+    public static String dumpClusterConfiguration(final ClusterConfiguration clusterConfiguration) {
+        return new Yaml().dumpAsMap(clusterConfiguration);
+    }
+
+    public static String dumpPluginConfiguration(final PluginConfiguration pluginConfiguration) {
+        return new Yaml().dumpAsMap(pluginConfiguration);
     }
 
 }

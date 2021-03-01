@@ -164,7 +164,25 @@ public final class CuratorZookeeperRegistryCenter implements RegistryCenter {
             CuratorZookeeperExceptionHandler.handleException(ex);
         }
     }
-    
+
+
+
+    @Override
+    public void delete(String key) {
+
+        try {
+            client.delete().deletingChildrenIfNeeded().forPath(key);
+            // CHECKSTYLE:OFF
+        } catch (final Exception ex) {
+            // CHECKSTYLE:ON
+            CuratorZookeeperExceptionHandler.handleException(ex);
+        }
+
+    }
+
+
+
+
     @Override
     public void update(final String key, final String value) {
         try {

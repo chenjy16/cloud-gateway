@@ -61,7 +61,6 @@ public class RoutePlugin extends AbstractPlugin {
         if(clusterConfigurationOptional.isPresent()){
             LoadBalanceAlgorithm lb=LoadBalanceFactory.of(clusterConfigurationOptional.get().getLoadBalanceAlgorithm());
             final String ip = Objects.requireNonNull(exchange.getRequest().getRemoteAddress()).getAddress().getHostAddress();
-
             ServerConfiguration serverConfiguration=lb.select(clusterConfigurationOptional.get(),ip);
             return proxyRequest(exchange,chain,buildRealURL(serverConfiguration),3000);
         }

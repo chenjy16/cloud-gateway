@@ -24,6 +24,8 @@ public interface RegistryCenter extends AutoCloseable {
     
 
     void persist(String key, String value);
+
+    void delete(String key);
     
 
     void update(String key, String value);
