@@ -2,14 +2,17 @@ package org.cloud.gateway.admin.response;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 
 @NoArgsConstructor
 @Data
-public class GatewayAdminRes {
+public final class GatewayAdminRes<T>  {
 
-    private Integer code;
+    private Integer code=0;
 
     private String message;
 
-    private Object data;
+    private T data;
+
 }
