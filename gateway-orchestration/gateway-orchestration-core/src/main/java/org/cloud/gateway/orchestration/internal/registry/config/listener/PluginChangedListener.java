@@ -16,7 +16,7 @@ public final class PluginChangedListener extends PostGatewayOrchestrationEventLi
     
     @Override
     protected PluginChangedEvent createShardingOrchestrationEvent(final DataChangedEvent event) {
-        return new PluginChangedEvent(ConfigurationYamlConverter.loadPluginConfiguration(event.getValue()));
+        return new PluginChangedEvent(event.getChangedType(),ConfigurationYamlConverter.loadPluginConfiguration(event.getValue()));
     }
 
 }

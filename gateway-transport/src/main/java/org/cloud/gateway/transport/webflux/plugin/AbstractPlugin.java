@@ -7,7 +7,6 @@ import org.cloud.gateway.orchestration.internal.registry.config.event.PluginChan
 import org.cloud.gateway.orchestration.internal.registry.eventbus.GatewayOrchestrationEventBus;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
-
 import java.util.Map;
 import java.util.Objects;
 
@@ -34,10 +33,18 @@ public abstract class AbstractPlugin implements Plugin {
      */
     @Subscribe
     public synchronized void changeConfiguration(final PluginChangedEvent pluginChangedEvent) {
-        if(Objects.nonNull(this.pluginConfigurationMap.get(pluginChangedEvent.getPluginConfiguration().getName()))){
-            this.pluginConfigurationMap.put(pluginChangedEvent.getPluginConfiguration().getName(),pluginChangedEvent.getPluginConfiguration());
-        }
 
+        switch (pluginChangedEvent.getChangedType()) {
+            case UPDATED:
+            case ADDED:
+                this.pluginConfigurationMap.put(pluginChangedEvent.getPluginConfiguration().getId(),pluginChangedEvent.getPluginConfiguration());
+                break;
+            case DELETED:
+                this.pluginConfigurationMap.remove(pluginChangedEvent.getPluginConfiguration().getId());
+                break;
+            default:
+                break;
+        }
     }
 
 

@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import static org.cloud.gateway.orchestration.reg.listener.DataChangedEvent.ChangedType.*;
 
 @Slf4j
 public class RoutePlugin extends AbstractPlugin {
@@ -48,8 +49,16 @@ public class RoutePlugin extends AbstractPlugin {
      */
     @Subscribe
     public synchronized void changeConfiguration(final RouteChangedEvent routeChangedEvent) {
-        if(Objects.nonNull(this.clusterConfigurationMap.get(routeChangedEvent.getClusterConfiguration().getId()))){
-            this.clusterConfigurationMap.put(routeChangedEvent.getClusterConfiguration().getId(),routeChangedEvent.getClusterConfiguration());
+        switch (routeChangedEvent.getChangedType()) {
+            case UPDATED:
+            case ADDED:
+                this.clusterConfigurationMap.put(routeChangedEvent.getClusterConfiguration().getId(),routeChangedEvent.getClusterConfiguration());
+                break;
+            case DELETED:
+                this.clusterConfigurationMap.remove(routeChangedEvent.getClusterConfiguration().getId());
+                break;
+            default:
+                break;
         }
     }
 
